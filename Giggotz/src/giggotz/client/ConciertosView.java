@@ -28,6 +28,7 @@ import java.util.Map;
 
 
 
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -43,6 +44,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -50,7 +52,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConciertosView extends Composite{
     private final GigServiceAsync gigService=GWT.create(GigService.class);
 	private final VerticalPanel panel;
+	//Estas dos listas sirven para cambiar dinamicamente los colores.
 	private final List<DecoratorPanel> listaDecPanel=new ArrayList<DecoratorPanel>();
+	private final List<Panel> listaDeIndices=new ArrayList<Panel>();
+	private HorizontalPanel panelPaginas=new HorizontalPanel();
 	
    
 	
@@ -58,13 +63,13 @@ public class ConciertosView extends Composite{
 		
 		panel=new VerticalPanel();
 		initWidget(panel);
-		panel.setSize("500px", "1000px");
+		//panel.setSize("500px", "1000px");
 		//panel.add(b);
 		//panel.add(new Label("sfadas"));
 		ponConciertos(params);
 		
 	}
-	
+	//Básicamente esto crea la vista de conciertos además de gestionar la llamada a la API y los errores.
 	private void ponConciertos(Map<String,Object> params){
 		//Label error=new Label("No se ha encontrado resultados que coincidan con la busqueda");
 		
@@ -90,15 +95,7 @@ public class ConciertosView extends Composite{
 				
 					
 					}else{
-					  List<Gig> conciertos=response.getGigs();
-					 conciertos.remove(conciertos.size()-1);
-					 
-				     for(Gig g:conciertos){
-				      DecoratorPanel dP=getPanelConcierto(g);	 
-					  panel.add(dP);
-					  listaDecPanel.add(dP);
-					  panel.setSpacing(10);
-				    }
+						agregaPanelesConcierto(response);
 				 }
 					
 				}	
@@ -123,21 +120,120 @@ public class ConciertosView extends Composite{
 					
 					
 					}else{
-						List<Gig> conciertos=response.getGigs();
-						conciertos.remove(conciertos.size()-1);
-						 
-						for(Gig g:conciertos){
-							 DecoratorPanel dP=getPanelConcierto(g);	
-							 panel.add(dP);
-							 listaDecPanel.add(dP);
-							 panel.setSpacing(10);
-				   }
+					 
+						agregaPanelesConcierto(response);
+						
 				  }	
 				 }	
 				});
 		}
 	}
 	
+	//Este método se encarga de agregar los distintos paneles que conforman la lista de conciertos.
+	private void agregaPanelesConcierto(Response response){
+		List<Gig> conciertos=response.getGigs();
+		conciertos.remove(conciertos.size()-1);
+		Integer nPaginas=(conciertos.size())/4;
+		if((conciertos.size()%4)!=0){
+			nPaginas++;
+		}
+		int toI;
+		if(nPaginas>1){
+			toI=4;
+		}else{
+			toI=conciertos.size();
+		}
+	    VerticalPanel conjunto4Conciertos=new VerticalPanel();
+		 
+		for(Gig g:conciertos.subList(0,toI)){
+			    DecoratorPanel dP=getPanelConcierto(g);
+			    conjunto4Conciertos.add(dP);
+				listaDecPanel.add(dP);
+				conjunto4Conciertos.add(dP);
+				
+		}
+		panel.add(conjunto4Conciertos);
+		panel.setSpacing(10);
+		//getPanelIndices(nPaginas,conciertos,conjunto4Conciertos);
+		panelPaginas=getPanelIndices(nPaginas,conciertos,conjunto4Conciertos);
+		panel.add(panelPaginas);
+		listaDeIndices.get(0).getElement().getStyle().setColor("blue");
+		
+		/*
+		for(Gig g:conciertos){
+			 DecoratorPanel dP=getPanelConcierto(g);	
+			 panel.add(dP);
+			 listaDecPanel.add(dP);
+			 panel.setSpacing(10);
+       }
+       */
+	}
+	
+	//Genera la lista de página de conciertos.
+	private HorizontalPanel getPanelIndices(final Integer nPaginas,final List<Gig> conciertos,
+			                                final VerticalPanel conjunto4Conciertos){
+      HorizontalPanel indicesPagina=new HorizontalPanel();
+      Label descripcionPaginas=new Label("Páginas: ");
+      descripcionPaginas.setStyleName("mainText");
+      indicesPagina.add(descripcionPaginas);
+      indicesPagina.setSpacing(10);
+      
+      for(Integer i=1;i<=nPaginas;i++){
+    	  final int u=i;
+    	  final Label nPagina=new Label(i.toString()+"/");
+    	  
+    	  nPagina.setStyleName("mainText");
+    	  final HorizontalPanel nPaginaPanel=new HorizontalPanel();
+    	  nPaginaPanel.add(nPagina);
+    	  nPaginaPanel.sinkEvents(Event.ONCLICK);
+    	  nPaginaPanel.addDomHandler(new ClickHandler(){
+
+  			@Override
+  			public void onClick(ClickEvent event) {
+  				conjunto4Conciertos.clear();
+  				listaDecPanel.clear();
+  				int fromI=u*4-4;
+  				int toI;
+  				if(u==nPaginas){
+  					toI=conciertos.size();
+  				}
+  				else{
+  					toI=u*4;
+  				}
+  				for(Panel p:listaDeIndices){
+  					p.getElement().getStyle().setColor("black");
+  				}
+  				
+  				listaDeIndices.get(u-1).getElement().getStyle().setColor("blue");
+  				
+  				//listaDeIndices.get(u-1).getElement().getStyle().setColor("blue");
+  				
+  				for(Gig g:conciertos.subList(fromI,toI)){
+  					
+  					DecoratorPanel dP=getPanelConcierto(g);
+  					conjunto4Conciertos.add(dP);
+  					listaDecPanel.add(dP);
+  					conjunto4Conciertos.setSpacing(5);
+  					//panel.add(getPanelConcierto(g));
+  					
+  				}
+  				panel.setSpacing(10);
+  				//panel.add(getPanelIndices(nPaginas,conciertos));
+  				
+  			}
+  			
+  		  },ClickEvent.getType() );
+    	  if(!(listaDeIndices.contains(nPaginaPanel))){
+    	  listaDeIndices.add(nPaginaPanel);
+    	  }
+    	  indicesPagina.add(nPaginaPanel);
+    	  indicesPagina.setSpacing(5);
+    	  
+      }
+      return indicesPagina;
+	}
+	
+	//Genera cada panel individual para cada concierto.
 	private DecoratorPanel getPanelConcierto(final Gig concierto){
 		final DecoratorPanel decPanel = new DecoratorPanel();
 		HorizontalPanel hPanelPrincipal=new HorizontalPanel();
