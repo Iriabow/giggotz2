@@ -4,6 +4,7 @@ import giggotz.client.rpc.nvivo.GigService;
 import giggotz.client.rpc.nvivo.GigServiceAsync;
 import giggotz.shared.nvivo.Example;
 import giggotz.shared.nvivo.Gig;
+import giggotz.shared.nvivo.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,19 +25,23 @@ public class Prueba {
 		
 				
 			
-			  LectorJson prueba=new LectorJson("http://www.nvivo.es/api/request.php?api_key=62747d997af89fcaef4eb0d44e202fb4&method=city.getEvents&city=Sevilla&format=json");
+			  LectorJson prueba=new LectorJson("http://www.nvivo.es/api/request.php?api_key=62747d997af89fcaef4eb0d44e202fb4&method=city.getEvents&city=jaen&format=json");
 		  
 			  prueba.parse();
-			  
-			   System.out.println("Bien hecho"+prueba.getGigs().get(0).getArtists().get(0).getName());
+			  Response k=prueba.getResponse();
+			  System.out.println(k.getStatus());
+			 
+			   System.out.println("Bien hecho"+prueba.getGigs().get(1).getArtists().get(0).getName());
 			   System.out.println("Bien hecho 2"+prueba.getGigs().get(0).getVenue().getLocation().getCountry());
 			   System.out.println("Evento"+prueba.getGigs().get(0).getName());
 			   System.out.println("Ciudad"+prueba.getVenues().get(0).getLocation().getCity());
 			   System.out.println("Precio"+prueba.getPrices().get(0).getMax());
 			   System.out.println("Foto"+prueba.getImages().get(1).getMedium());
 			   System.out.println("Response"+prueba.getResponse().getIndiceLista());
-			   System.out.println("Response"+prueba.getResponse().getGigs().get(9).getName());
+			   System.out.println("Response"+prueba.getResponse().getGigs().get(0).getName());
 			   System.out.println("Status: "+prueba.getResponse().getStatus());
+			   
+			  /*
 			   int i=0;
 			   List<Gig> res=prueba.getResponse().getGigs();
 			   res.remove(res.size()-1);
@@ -46,6 +51,7 @@ public class Prueba {
 				   System.out.println("calle"+g.getVenue().getLocation().getStreet());
 				   //System.out.println(g.getImages().getMedium());
 			   }
+			   */
 			  
 			   ClientResource rConcierto=null;
 			   try{

@@ -17,7 +17,7 @@ public class Gig implements Serializable{
     private List<Artist> artists = new ArrayList<Artist>();
     private Venue venue;
     private String ticketsUrl;
-    private TicketPrice ticketPrice;
+    private TicketPrice ticketPrice=new TicketPrice();
     private String startDate;
     private String modDate;
     private String description;

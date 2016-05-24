@@ -78,7 +78,7 @@ public class ConciertosView extends Composite{
 
 				
 				public void onFailure(Throwable cosa) {
-					 Giggotz.p.clear();
+					// Giggotz.p.clear();
 					Map<String,Object> params=new HashMap<String,Object>();
 					 params.put("failure","Error:"+cosa.getMessage());
 					 Giggotz.go("failure",params);
@@ -87,14 +87,15 @@ public class ConciertosView extends Composite{
 
 				public void onSuccess(Response response) {
 				
-					if(response.getStatus().equals("error")){
-						Giggotz.p.clear();
+					if(response.getStatus().equals("error") || response.getGigs().size()-1==0){
+					//	Giggotz.p.clear();
 						Map<String,Object> params=new HashMap<String,Object>();
 					    params.put("busquedaFallida","No se han encontrado conciertos del artista buscado");
 						Giggotz.go("init",params);
 				
 					
 					}else{
+					
 						agregaPanelesConcierto(response);
 				 }
 					
@@ -105,22 +106,22 @@ public class ConciertosView extends Composite{
 
 				
 				public void onFailure(Throwable cosa) {
-					 Giggotz.p.clear();
+					// Giggotz.p.clear();
 					 Map<String,Object> params=new HashMap<String,Object>();
 					 params.put("failure","Error: "+cosa.getMessage());
 					 Giggotz.go("failure",params);				
 				}
 
 				public void onSuccess(Response response) {
-					if(response.getStatus().equals("error")){
-						Giggotz.p.clear();
+					if(response.getStatus().equals("error") || response.getGigs().size()-1==0){
+					//	Giggotz.p.clear();
 						Map<String,Object> params=new HashMap<String,Object>();
 					    params.put("busquedaFallida","No se han encontrado conciertos en la ciudad buscada");
 						Giggotz.go("init",params);
 					
 					
 					}else{
-					 
+					   
 						agregaPanelesConcierto(response);
 						
 				  }	
@@ -134,22 +135,29 @@ public class ConciertosView extends Composite{
 		List<Gig> conciertos=response.getGigs();
 		conciertos.remove(conciertos.size()-1);
 		Integer nPaginas=(conciertos.size())/4;
+		
 		if((conciertos.size()%4)!=0){
+			
 			nPaginas++;
 		}
 		int toI;
 		if(nPaginas>1){
+			
 			toI=4;
 		}else{
+			
 			toI=conciertos.size();
+			
 		}
 	    VerticalPanel conjunto4Conciertos=new VerticalPanel();
 		 
 		for(Gig g:conciertos.subList(0,toI)){
+			   
 			    DecoratorPanel dP=getPanelConcierto(g);
 			    conjunto4Conciertos.add(dP);
 				listaDecPanel.add(dP);
 				conjunto4Conciertos.add(dP);
+				conjunto4Conciertos.setSpacing(5);
 				
 		}
 		panel.add(conjunto4Conciertos);
@@ -248,33 +256,46 @@ public class ConciertosView extends Composite{
 		hPanelPrincipal.setSpacing(7);
 		VerticalPanel texto=new VerticalPanel();
 		
-		texto.add(new Label("Concierto: "+concierto.getName()+"."));
-		texto.add(new Label("Lugar: "+concierto.getVenue().getName()+"."));
-		texto.add(new Label("Ciudad: "+concierto.getVenue().getLocation().getCity()+"."));
-		texto.add(new Label("Dirección: "+concierto.getVenue().getLocation().getStreet()+"."));
-		texto.add(new Label("Fecha: "+concierto.getStartDate()+"."));
+		texto.add(new Label("Concierto: "+ponAcentos(concierto.getName()+".")));
+		texto.add(new Label("Lugar: "+ponAcentos(concierto.getVenue().getName()+".")));
+		texto.add(new Label("Ciudad: "+ponAcentos(concierto.getVenue().getLocation().getCity()+".")));
+		texto.add(new Label("Dirección: "+ponAcentos(concierto.getVenue().getLocation().getStreet()+".")));
+		texto.add(new Label("Fecha: "+ponAcentos(concierto.getStartDate()+".")));
 		HorizontalPanel artistas=new HorizontalPanel();
 		
-		Double maximo=concierto.getTicketPrice().getMax();
-		Double minimo=concierto.getTicketPrice().getMin();
+
+	
+		
+		String maximo=concierto.getTicketPrice().getMax();
+		String minimo=concierto.getTicketPrice().getMin();
 		if(!(maximo.equals(minimo))){
-		texto.add(new Label("Precio entrada: entre "+minimo+" y "
+			texto.add(new Label("Precio entrada: entre "+minimo+" y "
 				                              +maximo+" €."));
 		}else{
 			texto.add(new Label("Precio entrada: "+maximo+" €."));
 		}
+		
+		
+	
+		
 		artistas.add(new Label("Artista:"));
 		final ListBox listBoxArtistas=new ListBox();
 		final List<Artist> listaArtistas=  concierto.getArtists();
 		for(Artist a:listaArtistas){
-			listBoxArtistas.addItem(a.getName());
+			listBoxArtistas.addItem(ponAcentos(a.getName()));
 		}
+		
+		
 		artistas.setSpacing(6);
 		artistas.add(listBoxArtistas);
         texto.add(artistas);
         texto.setWidth("400px");
 		hPanelPrincipal.add(texto);
-		 Button botonComprar=new Button("¡Comprar entrada!");
+		
+		
+		if(concierto.getUrl()!=null){
+		 Button botonComprar;
+		 botonComprar=new Button("¡Comprar entrada!");
 		    botonComprar.addClickHandler(new ClickHandler(){
 		    	public void onClick(ClickEvent click){
 		    		Window.open(concierto.getUrl(), "_blank", "");
@@ -282,7 +303,9 @@ public class ConciertosView extends Composite{
 
 				
 		    });
-		hPanelPrincipal.add(botonComprar);    
+		    
+		 hPanelPrincipal.add(botonComprar);    
+		}
 		
 		decPanel.add(hPanelPrincipal);
 		decPanel.setWidth("650px");
@@ -306,6 +329,53 @@ public class ConciertosView extends Composite{
 		},ClickEvent.getType() );
 		return decPanel;
 		
+	}
+	private String ponAcentos(String s){
+		//String k="";
+		String conAcento="";
+		Boolean codigoXZ=false;
+		for(int w=0;w<s.length();w++){
+			//k=k+s.charAt(w);
+			
+			if(w!=s.length()-2 && s.charAt(w)==('x') && s.charAt(w+1)==('z')){
+				codigoXZ=true;
+				w=w+2;
+			}
+			
+			if(codigoXZ){
+				if(s.charAt(w)==('n')){
+					conAcento=conAcento+"ni";
+					
+				}else
+				if(s.charAt(w)==('a')){
+					conAcento=conAcento+"a";
+					
+				}else
+				if(s.charAt(w)==('e')){
+					conAcento=conAcento+"e";
+					
+				}else
+				if(s.charAt(w)==('i')){
+					conAcento=conAcento+"i";
+				
+				}else
+				if(s.charAt(w)==('o')){
+					conAcento=conAcento+"o";
+					
+				}else
+				if(s.charAt(w)==('u')){
+					conAcento=conAcento+"u";
+					
+				}
+				codigoXZ=false;
+			}else{
+				conAcento=conAcento+s.charAt(w);
+			}
+				
+		}
+		
+			
+		return conAcento;	
 	}
 	
 }

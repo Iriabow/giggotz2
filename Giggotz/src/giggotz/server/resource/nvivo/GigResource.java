@@ -20,7 +20,7 @@ public class GigResource {
 	
 	
 	public Response getRespuestaPorCiudad(String ciudad) {
-		
+		String ciudadFormateada=daFormato(ciudad);
 		//ClientResource rConcierto=null;
 		Response r=new Response();
 	
@@ -44,13 +44,13 @@ public class GigResource {
 	}
 	
 	public Response getRespuestaPorArtista(String artista) {
-
+        String artistaFormateado=daFormato(artista);
 		
 		Response r=new Response();
 	
 		//try{
 			//rConcierto = new ClientResource
-			LectorJson lector=new LectorJson(uri+"api_key="+key+"&method=artist.getEvents&artist="+artista+formato);
+			LectorJson lector=new LectorJson(uri+"api_key="+key+"&method=artist.getEvents&artist="+artistaFormateado+formato);
 			lector.parse();
 			r=lector.getResponse();
 		/*	
@@ -67,5 +67,22 @@ public class GigResource {
 		
 		return r;
 	}
-	
+	private String daFormato(String cadena){
+		String cadenaFormateada="";
+		cadena.trim();
+		if(cadena.contains(" ")){
+			
+			String[] fragmentosCadena=cadena.split(" ");
+			
+			for(int i=0;i<fragmentosCadena.length;i++){
+				if(!fragmentosCadena[i].contains(" ")){
+					cadenaFormateada=cadenaFormateada+fragmentosCadena[i]+"%20";
+				}
+			}
+			
+		}else{
+			cadenaFormateada=cadena;
+		}
+		return cadenaFormateada;
+	}
 }

@@ -154,6 +154,7 @@ public class LectorJson {
 			if(cumuloDatos.endsWith("\"ticket_price\":")){
 				TicketPrice p=recorreTickectPrice();
 				prices.add(p);
+			
 				gigs.get(indiceLista).setTicketPrice(p);
 			}
 			if(cumuloDatos.endsWith("startDate\":")){
@@ -211,9 +212,29 @@ public class LectorJson {
 			char u=objeto.charAt(w);
 			//Character.isAlphabetic(u) || u==(' ') || u==('/') || u==('/') || u==('/')
 			if(u!=('"')){
+				if(u=='�'){
+				    objeto2=objeto2+"xzn";	
+				}else if(u=='�'){
+					objeto2=objeto2+"xza";
+				
+				}else if(u=='�'){
+					objeto2=objeto2+"xze";
+				
+				}else if(u=='�'){
+					objeto2=objeto2+"xzi";
+				
+				}else if(u=='�'){
+					objeto2=objeto2+"xzo";
+				
+				}else if(u=='�'){
+					objeto2=objeto2+"xzu";
+				}
+				else{
 				objeto2=objeto2+u;
+				}
 			}
-		}
+	     }
+	
 		return objeto2;
 	}
 	
@@ -414,7 +435,7 @@ public class LectorJson {
 			cumuloDatos=cumuloDatos+a;
 			if(cumuloDatos.endsWith("\"small\":")){
 				String s=recorreObjeto();
-				System.out.println("Prueba"+s);
+				//System.out.println("Prueba"+s);
 				images.setSmall(s);
 			}
 			if(cumuloDatos.endsWith("\"medium\":")){
