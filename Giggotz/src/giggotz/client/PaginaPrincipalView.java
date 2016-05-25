@@ -25,13 +25,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PaginaPrincipalView extends Composite{
 
-	private final TextBox textbox=new TextBox();
-	final ListBox tipoBusqueda=new ListBox();
+	private final TextBox textbox=new TextBox(); //aqui va el artista o la ciudad en cuestion
+	final ListBox tipoBusqueda=new ListBox(); // se elige entre ciudad o artista
 	private final VerticalPanel panel;
 	public PaginaPrincipalView(Map<String,Object> params){
-		final Map<String,Object> busqueda=new HashMap<String,Object>();
+		final Map<String,Object> busqueda=new HashMap<String,Object>(); //pasaremos objetos a la vista siguiente con esto
 		panel=new VerticalPanel();
-		initWidget(panel);
+		initWidget(panel); //se inician los paneles
 		//Primer panel horizontal.
 		textbox.setVisibleLength(40);
 		Image imagen=new Image("https://raw.githubusercontent.com/Iriabow/hello-world/master/giggotzYIcono.png");
@@ -43,9 +43,9 @@ public class PaginaPrincipalView extends Composite{
 	    Button botonBusqueda=new Button("Buscar");
 	    botonBusqueda.addClickHandler(new ClickHandler(){
 	    	public void onClick(ClickEvent click){
-	    		 busqueda.put("busqueda", textbox.getText());
-	    		 busqueda.put("tipoBusqueda",(new Integer(tipoBusqueda.getSelectedIndex())).toString());
-	    		Giggotz.go("busqueda", busqueda);
+	    		 busqueda.put("busqueda", textbox.getText()); //se añade al map String busqueda con object texbox
+	    		 busqueda.put("tipoBusqueda",(new Integer(tipoBusqueda.getSelectedIndex())).toString()); //string con object tipo busqueda
+	    		Giggotz.go("busqueda", busqueda); //se va a la vista de conciertos
 	    	}
 
 			
@@ -54,7 +54,7 @@ public class PaginaPrincipalView extends Composite{
 	    //Fin primer panel horizontal.
 	    panel.add(hPanel);
 	    panel.setSpacing(20);
-	    //Segundo panel horizonta.
+	    //Segundo panel horizontal.
 	    HorizontalPanel hPanel2=new HorizontalPanel();
 	    Label aBuscar=new Label("Buscar conciertos en EspaÃ±a por: ");
 	    aBuscar.setStyleName("mainText");

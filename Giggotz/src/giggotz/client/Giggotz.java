@@ -59,6 +59,9 @@ public class Giggotz implements EntryPoint {
 		
 		}
 		if(token.equals("spotifyWikipedia")){
+			//creamos un boolean para resolver el conflicto de la primera vez necesitar añadir la vista
+			//y el resto que clicamos un concierto borrar y volver a añadir la vista
+			//ahora nos vamos a unionView
 			if(!unionViewCreada){
 			horizontalP.add(new UnionView(params));
 			unionViewCreada=true;

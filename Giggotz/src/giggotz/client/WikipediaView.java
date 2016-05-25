@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
+
 
 public class WikipediaView extends Composite {
 
@@ -21,22 +21,21 @@ public class WikipediaView extends Composite {
 			.create(WikipediaService.class);
 	private final HorizontalPanel main = new HorizontalPanel();
 
-	public WikipediaView(Map<String, String> params) {
+	public WikipediaView(Map<String, Object> params) {
 
 		initWidget(main);
 
-		final Button buscar = new Button("Buscar");
-		final TextBox artista = new TextBox();
+		//final Button buscar = new Button("Buscar"); //boton que busca información por artista
+		final String artista = params.get("artista").toString(); 
 		final TextArea texto = new TextArea();
 		final TextArea error = new TextArea();
 		
-		main.add(artista);
-		main.add(buscar);
+		//main.add(buscar);
 
-		buscar.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		//buscar.addClickHandler(new ClickHandler() {
+			//public void onClick(ClickEvent event) {
 
-				extracto.getExtract(artista.getValue(),
+				extracto.getExtract(artista,
 						new AsyncCallback<String>() {
 
 							public void onSuccess(String result) {
@@ -51,6 +50,6 @@ public class WikipediaView extends Composite {
 
 						});
 			}
-		});
+		//});
 	}
-}
+//}
