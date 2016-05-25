@@ -5,6 +5,14 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
+	<!-- All REST resources will be prefixed by /api -->
+
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/api</param-value>
+	</context-param>
+
+
   <!-- Servlets -->
    <servlet>
     <servlet-name>gigServlet</servlet-name>
@@ -14,6 +22,24 @@
   <servlet-mapping>
     <servlet-name>gigServlet</servlet-name>
     <url-pattern>/giggotz/gig</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>Resteasy</servlet-name>
+  	<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+ 	<init-param>
+ 		<param-name>javax.ws.rs.Application</param-name>
+ 		<!-- aqui hay que poner la clase que implementara javax.ws.rs.Application -->
+ 		<param-value></param-value>
+ 	</init-param>
+  </servlet>
+  
+  <!-- Servlet mappings -->
+  <!-- All calls to /api/xxx will be sent to the resteasy servlet -->
+  <servlet-mapping>
+  	<servlet-name>Resteasy</servlet-name>
+  	<!-- A esto tambien hay que darle un garbeico bueno -->
+  	<url-pattern>/api/*</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
