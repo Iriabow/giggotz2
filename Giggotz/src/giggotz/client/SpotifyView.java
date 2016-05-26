@@ -19,6 +19,8 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class SpotifyView implements EntryPoint {
 
+	//a victor le gustan las poillas
+	
 	final Button buscar = new Button("buscar");
 	final TextBox caja = new TextBox();
 	HorizontalPanel mainPanel = new HorizontalPanel();
