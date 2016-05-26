@@ -1,0 +1,2 @@
+serviceClass: giggotz.client.rpc.nvivo.GigService
+path: B8ABAD41D1F5459B5535224CB21B09A5.gwt.rpc

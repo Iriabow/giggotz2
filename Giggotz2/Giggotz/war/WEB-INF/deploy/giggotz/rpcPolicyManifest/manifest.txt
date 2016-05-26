@@ -1,0 +1,3 @@
+# Module giggotz
+# RPC service class, partial path of RPC policy file
+giggotz.client.rpc.nvivo.GigService, B8ABAD41D1F5459B5535224CB21B09A5.gwt.rpc
