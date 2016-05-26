@@ -11,6 +11,8 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.ext.jackson.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.ext.net.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jaxrs-api-2.3.4.Final.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/resteasy-jaxrs-2.3.4.Final.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
